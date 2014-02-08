@@ -1,0 +1,86 @@
+#!/usr/bin/env node
+/**
+ * 1. 「-d」スイッチを生入力にしました。
+ *
+ * ターミナルではこれになりました
+ * ```
+ *   $ ./app
+ *   $ ./app -f ../l
+ *   $ more -f ../l | ./app
+ *   $ ./app -d
+ * ```
+ */
+var yargs = require("yargs")
+    .usage('Usage: app -f [file]')
+    .describe('f', 'Load a file')
+    .describe('d', 'Uses direct command line input to say text')
+    .boolean('d')
+    .alias("file", "f"),
+async = require("async"),
+argv = yargs.argv;
+
+if(!process.stdin.isTTY || argv.d) {
+	var stdin = process.stdin,
+		stdout = process.stdout,
+		text = [],
+		lastTime,
+		keypress = require('keypress'),
+		ignoredKeys = " up, down, left, right,",
+		running;
+
+	keypress(stdin);
+
+	stdin.setRawMode(true);
+	stdin.resume();
+	stdin.setEncoding('utf8');
+	stdin.on("keypress", function(chunk, key) {
+    	lastTime = Date.now();
+	    if(key) {
+	    	if(ignoredKeys.indexOf(" "+key+",") != -1) {
+	    		return
+	    	} else if(key.name === "c" && key.ctrl) {
+		        process.exit();
+		    	return;
+		    } else if(key.name === "space") {
+		    	chunk = " ";
+		    } else if(key.name === "tab") {
+		    	chunk = "\t";
+		    } else if (key.name === "return") {
+		    	lastTime = 0;
+		    	return;
+		    } else if (key.name === "escape") {
+		    	text = [];
+		    	stdout.write("\n");
+		    	return;
+		    } else if (key.name == "backspace") {
+		    	if(text.length > 0) {
+		    		process.stdout.write("\b");
+		    		text.pop();
+		    	}
+		    	return;
+		    } else {
+		    	chunk = key.name;
+		    }
+		}
+    	text.push(chunk);
+    	stdout.write(chunk);
+	});
+
+	function loop() {
+		if(lastTime < Date.now() - 800 && text.length > 0 && !running) {
+			stdout.write("\n");
+			require("child_process").exec("say-more -t \""+text.join('')+"\"", function() {
+				running = false;
+				loop();
+			});	
+			text = [];
+		} else {
+			setImmediate(loop);
+		}
+	}
+	loop();
+} else if(argv.f) {
+	require("child_process").exec("say-more -f "+argv.f);
+} else {
+	yargs.showHelp();
+}
