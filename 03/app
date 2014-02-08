@@ -1,0 +1,9 @@
+#!/usr/bin/env node
+/**
+ * ``` $ which node ``` はやっぱりPCによってちがっていますので正しい方法にかえました。
+ * ターミナルではこれになりました
+ * ```
+ *   $ ./app
+ * ```
+ */
+require("child_process").exec("say-more -f ../c");

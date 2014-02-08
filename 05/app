@@ -1,0 +1,16 @@
+#!/usr/bin/env node
+/**
+ * 1. process.argvの一覧にはすべてのコマンドのStringが書いてあります。
+ * 2. ```error```を渡すとエラーがでるようにします。
+ *
+ * ターミナルではこれになりました
+ * ```
+ *   $ ./app
+ *   $ ./app error
+ * ```
+ */
+var err = process.argv[2] == "error";
+
+require("child_process").exec("say-more -f ../e"+(err ? 2 : 1), function() {
+	process.exit(err ? 1 : 0);
+});

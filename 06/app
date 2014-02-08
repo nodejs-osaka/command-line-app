@@ -1,0 +1,16 @@
+#!/usr/bin/env node
+/**
+ * 1. process.argv[2]の代わりに[1]も使えます。
+ *
+ * ターミナルではこれになりました
+ * ```
+ *   $ ./app
+ *   $ ./error
+ * ```
+ */
+var path = require("path"),
+	err = process.argv[1] == path.resolve(__dirname, "error");
+
+require("child_process").exec("say-more -f ../f"+(err ? 2 : 1), function() {
+	process.exit(err ? 1 : 0);
+});

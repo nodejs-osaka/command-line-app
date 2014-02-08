@@ -1,0 +1,46 @@
+#!/usr/bin/env node
+/**
+ * 1. process.stdin.isTTYを使って「|」かどうかを使っているのを区別します。
+ * 2. TTYではない場合はパイプのデーターを読むスイッチをつけます： ```stdin.resume();```
+ * 3.　データもらったあとはすべてを出します。
+ *
+ * ターミナルではこれになりました
+ * ```
+ *   $ ./app
+ *   $ ./app -f ../j
+ *   $ more -f ../j | ./app
+ * ```
+ */
+var yargs = require("yargs")
+    .usage('Usage: app -f [file]')
+    .describe('f', 'Load a file')
+    .describe('c', 'Counts the files')
+    .alias("file", "f")
+    .alias("count", "c")
+    .default('c', 1),
+async = require("async"),
+argv = yargs.argv;
+
+if (!process.stdin.isTTY) {
+	var stdin = process.stdin,
+		text = [];
+
+	stdin.resume();
+	stdin.setEncoding('utf8');
+
+	stdin.on('data', function(chunk) {
+		text.push(chunk);
+	});
+
+	stdin.on('end', function() {
+		require("child_process").exec("say-more -t \""+text.join('')+"\"");
+	});
+} else if (argv.f) {
+	async.timesSeries(argv.c || 1, function(n, next) {
+		require("child_process").exec("say-more -f "+argv.f, next);
+	}, function() {
+		require("child_process").exec("say-more -f ../i2");
+	});
+} else {
+	yargs.showHelp();
+}

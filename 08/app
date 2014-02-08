@@ -1,0 +1,24 @@
+#!/usr/bin/env node
+/**
+ * 1. process.argvを使うよりyargsの法が簡単です。
+ *
+ * ターミナルではこれになりました
+ * ```
+ *   $ ./app
+ *   $ ./app -f ../h
+ *   $ ./app -t hi
+ * ```
+ */
+var yargs = require("yargs")
+	    .usage('Usage: app -f [file]')
+	    .describe('f', 'Load a file')
+	    .describe('t', 'Say some text'),
+	argv = yargs.argv;
+
+if(argv.f) {
+	require("child_process").exec("say-more -f "+argv.f);
+} else if(argv.t) {
+	require("child_process").exec("say-more -t "+argv.t);
+} else {
+	yargs.showHelp();
+}

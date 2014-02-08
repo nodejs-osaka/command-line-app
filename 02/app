@@ -1,0 +1,12 @@
+#!/usr/local/bin/node
+/**
+ * 1. ```app.js``` の名前を ```app``` に書き換えいました。
+ * 2. shellのスクリプトヘッダー (#!...) を ``` $ which node ``` の結果につけました。
+ * 3. ```chmod +x app``` を使ってappが読めるようのことを確認しました。
+ *
+ * ターミナルではこれになりました
+ * ```
+ *   $ ./app
+ * ```
+ */
+require("child_process").exec("say-more -f ../b");

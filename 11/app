@@ -1,0 +1,36 @@
+#!/usr/bin/env node
+/**
+ * 1. 「-d」スイッチでそのままタイプできるようにしました。
+ *
+ * ターミナルではこれになりました
+ * ```
+ *   $ ./app
+ *   $ ./app -f ../k
+ *   $ more -f ../k | ./app
+ *   $ ./app -d
+ * ```
+ */
+var yargs = require("yargs")
+    .usage('Usage: app -f [file]')
+    .describe('f', 'Load a file')
+    .describe('d', 'Uses direct command line input to say text')
+    .boolean('d')
+    .alias("file", "f"),
+async = require("async"),
+argv = yargs.argv;
+
+if(!process.stdin.isTTY || argv.d) {
+	var stdin = process.stdin,
+		text = [];
+
+	stdin.resume();
+	stdin.setEncoding('utf8');
+	stdin.on('data', function(chunk) {
+		require("child_process").exec("say-more -t \""+chunk+"\"");
+	});
+
+} else if(argv.f) {
+	require("child_process").exec("say-more -f "+argv.f);
+} else {
+	yargs.showHelp();
+}

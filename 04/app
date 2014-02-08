@@ -1,0 +1,13 @@
+#!/usr/bin/env node
+/**
+ * 1. process.exitはすぐスレッドを消しますからcallbackのなかに入れないとなにも聞こえません。
+ * 2. エラーのを出したい時はエラーコードをつけることができる。
+ *
+ * ターミナルではこれになりました
+ * ```
+ *   $ ./app
+ * ```
+ */
+require("child_process").exec("say-more -f ../d", function() {
+	process.exit(1);
+});
