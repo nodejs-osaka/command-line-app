@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 /**
  * これからは```sudo npm install marked-man -g```が必要です。
+ *
+ * パッケージ: https://github.com/kapouer/marked-man
+ * 情報: https://github.com/kapouer/marked-man/blob/master/test/files/markdown_syntax.man
  * 
  * 1. global.1.mdファイルを追加しました。
  * 2. ```$ marked-man globalapp.1.md > globalapp.1```
