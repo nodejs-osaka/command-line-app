@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 /**
  * 1. process.argvを使うよりyargsの法が簡単です。
+ * https://github.com/chevex/yargs
  *
  * ターミナルではこれになりました
  * ```
