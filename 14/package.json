@@ -1,0 +1,16 @@
+{
+  "name": "globalapp",
+  "version": "0.0.0",
+  "description": "Node.JS Osaka - Commandline presentation - Test app",
+  "main": "app",
+  "bin": {
+    "globalapp": "app"
+  },
+  "dependencies": {
+    "keypress": "~0.2.1",
+    "yargs": "~1.0.15",
+    "async": "~0.2.10"
+  },
+  "man": "globalapp.1",
+  "license": "ISC"
+}
